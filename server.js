@@ -1,3 +1,4 @@
+// server.js
 require('rootpath')();
 const express = require('express');
 const app = express();
@@ -25,6 +26,12 @@ app.use('/departments', require('./departments/department.controller'));
 
 //requests routes   
 app.use('/requests', require('./requests/request.controller'));
+
+//workflows routes
+app.use('/workflows', require('./workflows/workflow.controller'));
+
+//onboarding routes
+app.use('/onboarding', require('./onboarding/onboarding.controller'));
 
 
 // swagger docs route

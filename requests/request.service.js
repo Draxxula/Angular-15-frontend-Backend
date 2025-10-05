@@ -75,9 +75,21 @@ async function create(params) {
   const employee = await db.Employee.findByPk(params.employeeId);
   if (!employee) throw 'Employee not found';
 
+  // Create the request first
   const request = await db.Request.create(params);
+
+  // ✅ Create corresponding workflow entry for this request
+  await db.Workflow.create({
+    type: 'Request Approval',
+    details: `Approval for ${params.type} request by ${params.employeeId}`,
+    employeeId: params.employeeId,
+    requestId: request.id, // link to the newly created request
+    status: 'Pending'
+  });
+
   return request;
 }
+
 
 // Update request
 async function update(id, params) {
