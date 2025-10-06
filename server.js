@@ -7,19 +7,32 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const errorHandler = require('_middleware/error-handler');
 
+
+// ✅ CORS configuration (very important for credentials)
+app.use(
+  cors({
+    origin: 'https://websystemtest.vercel.app',  // 👈 your frontend domain
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })
+);
+
+// ✅ Handle preflight requests explicitly
+app.options('*', cors({
+  origin: 'https://websystemtest.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
 // allow cors requests from any origin and with credentials
 //app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
-
-app.use(
-  cors({
-    origin: 'https://websystemtest.vercel.app',
-    credentials: true // ✅ this is required for cookies & withCredentials
-  })
-);
 
 // api routes
 //accounts routes
