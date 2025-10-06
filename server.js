@@ -14,7 +14,12 @@ app.use(cookieParser());
 // allow cors requests from any origin and with credentials
 //app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
-app.use(cors({ origin: 'https://websystemtest.vercel.app' }));
+app.use(
+  cors({
+    origin: 'https://websystemtest.vercel.app',
+    credentials: true // ✅ this is required for cookies & withCredentials
+  })
+);
 
 // api routes
 //accounts routes
