@@ -7,7 +7,6 @@
       "password": "AVNS_lL-AlFKRAdlRw45XEdc",
       "database": "defaultdb"
 
-
     },
     "secret": "9087cae9-0886-407e-8cd0-32ab52be42a7",
     "emailFrom": "info@node-mysql-signup-verification-api.com",
@@ -15,8 +14,8 @@
       "host": "smtp.ethereal.email",
       "port": 587,
       "auth": {
-        "user": "casper.wiegand@ethereal.email",
-        "pass": "gc2GbPC277MUW4FmY9"
+        "user": "connor.rowe@ethereal.email",
+        "pass": "rZxAKYu9n5kNzZ8CaU"
       }
     }
   }
