@@ -1,3 +1,5 @@
+// middleware to authorize access based on user roles
+
 const { expressjwt } = require('express-jwt'); // Destructure the expressjwt function
 const config = require('config.json');
 const db = require('_helpers/db');

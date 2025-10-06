@@ -22,6 +22,7 @@ function createSchema(req, res, next) {
     isActive: Joi.boolean().default(true),
     order: Joi.number().default(0)
   });
+ 
   validateRequest(req, next, schema);
 }
 

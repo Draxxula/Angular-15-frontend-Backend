@@ -2,61 +2,22 @@
 const config = require('../config.json');
 const mysql = require('mysql2/promise');
 const { Sequelize } = require('sequelize');
-const fs = require('fs');
-const path = require('path');
 
 module.exports = db = {};
 
 initialize();
 
 async function initialize() {
-
-    let caCert;
-    try {
-        if (process.env.MYSQL_SSL_CA) {
-    // Decode Base64 back to PEM text
-    caCert = Buffer.from(process.env.MYSQL_SSL_CA, 'base64').toString('utf-8');
-} else {
-    // Fallback to local file (dev only)
-    const caCertPath = path.join(__dirname, '../certs/ca.pem');
-    if (fs.existsSync(caCertPath)) {
-        caCert = fs.readFileSync(caCertPath, 'utf-8');
-    }
-}
-    } catch (err) {
-        console.warn('⚠️ No CA certificate found, SSL may fail if required.');
-    }
-
+    // create db if it doesn't already exist
     const { host, port, user, password, database } = config.database;
-
-    // --- 1. mysql2 Connection (create DB if missing) ---
-    const connectionOptions = {
-        host,
-        port,
-        user,
-        password,
-        ssl: caCert ? { ca: caCert, rejectUnauthorized: true } : undefined
-    };
-
-    try {
-        const connection = await mysql.createConnection(connectionOptions);
-        await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
-        await connection.end();
-        console.log(`✅ Database "${database}" ensured.`);
-    } catch (error) {
-        console.error('❌ Database connection failed during initial setup (mysql2):', error.message);
-        throw error;
-    }
+    const connection = await mysql.createConnection({ host, port, user, password });
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
 
     // connect to db
     const sequelize = new Sequelize(database, user, password, { 
         host,
         port,
         dialect: 'mysql',
-        logging: false, // disable logging; default: console.log
-        dialectOptions: caCert 
-            ? { ssl: { ca: caCert, rejectUnauthorized: true } } 
-            : {},
         logging: console.log   // 🔹 shows SQL queries (so you’ll see CREATE TABLE …)
     }); 
 
@@ -103,13 +64,13 @@ async function initialize() {
     db.OnboardingTemplate.belongsTo(db.Department, { foreignKey: 'departmentId', as: 'department' });
 
 
+     // then accounts and refresh tokens
+    await db.Account.sync();
+    await db.RefreshToken.sync();
     // sync departments first
     await db.Department.sync();
     // then employees
     await db.Employee.sync();
-    // then accounts and refresh tokens
-    await db.Account.sync();
-    await db.RefreshToken.sync();
     // then requests
     await db.Request.sync();
     // then workflows

@@ -19,13 +19,22 @@ module.exports = router;
 // ===== Schemas =====
 function createSchema(req, res, next) {
   const schema = Joi.object({
-    type: Joi.string().required(),           // Equipment, Leave, etc.
-    items: Joi.string().required(),          // Laptop (x1), Vacation (x5)
+    type: Joi.string().required(),
+    items: Joi.alternatives().try(
+      Joi.string(),
+      Joi.array().items(
+        Joi.object({
+          name: Joi.string().required(),
+          quantity: Joi.number().required()
+        })
+      )
+    ).required(),
     status: Joi.string().valid('Pending', 'Approved', 'Rejected').default('Pending'),
     employeeId: Joi.string().required()
   });
   validateRequest(req, next, schema);
 }
+
 
 function updateSchema(req, res, next) {
   const schema = Joi.object({

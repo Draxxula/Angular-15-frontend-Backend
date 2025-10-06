@@ -1,11 +1,13 @@
 
 {
     "database": {
-      "host": "localhost",
-      "port": 3306,
-      "user": "root",
-      "password": "root074203",
-      "database": "node-mysql-signup-verification-api"
+      "host": "mysql-3b350b2b-angcahandjx123-98e5.e.aivencloud.com",
+      "port": 27483,
+      "user": "avnadmin",
+      "password": "AVNS_lL-AlFKRAdlRw45XEdc",
+      "database": "defaultdb"
+
+
     },
     "secret": "9087cae9-0886-407e-8cd0-32ab52be42a7",
     "emailFrom": "info@node-mysql-signup-verification-api.com",
