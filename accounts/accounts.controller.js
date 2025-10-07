@@ -44,15 +44,20 @@ function authenticateSchema(req, res, next) {
   }
   
   function refreshToken(req, res, next) {
-    const token = req.cookies.refreshToken;
-    const ipAddress = req.ip;
-    accountService.refreshToken({ token, ipAddress })
-      .then(({ refreshToken, ...account }) => {
-        setTokenCookie(res, refreshToken);
-        res.json(account);
-      })
-      .catch(next);
+  const token = req.cookies.refreshToken;
+  const ipAddress = req.ip;
+
+  if (!token) {
+    return res.status(400).json({ message: 'Missing refresh token' });
   }
+
+  accountService.refreshToken({ token, ipAddress })
+    .then(({ refreshToken, ...account }) => {
+      setTokenCookie(res, refreshToken);
+      res.json(account);
+    })
+    .catch(next);
+}
 
   function revokeTokenSchema(req, res, next) {
     const schema = Joi.object({
