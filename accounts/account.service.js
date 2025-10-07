@@ -111,9 +111,12 @@ async function register(params, origin) {
   
     // save account
     await account.save();
+
+    account.verified = Date.now();
+    await account.save();
   
     // send email
-    await sendVerificationEmail(account, origin);
+    //await sendVerificationEmail(account, origin);
   }  
 
   async function verifyEmail({ token }) {
