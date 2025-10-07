@@ -9,9 +9,14 @@ const workflowService = require('./workflow.service');
 
 // routes
 router.get('/', authorize([Role.Admin, Role.User]), getAll);
-router.get('/:id', authorize([Role.Admin, Role.User]), getById);
+
+// ✅ More specific routes first
 router.get('/employee/:employeeId', authorize([Role.Admin, Role.User]), getByEmployee);
 router.get('/request/:requestId', authorize([Role.Admin, Role.User]), getByRequest);
+
+// ✅ Generic route last
+router.get('/:id', authorize([Role.Admin, Role.User]), getById);
+
 router.post('/', authorize([Role.Admin, Role.User]), createSchema, create);
 router.put('/:id', authorize([Role.Admin, Role.User]), updateSchema, update);
 router.delete('/:id', authorize([Role.Admin, Role.User]), _delete);
