@@ -115,6 +115,17 @@ async function register(params, origin) {
     account.verified = Date.now();
     await account.save();
   
+    // ✅ Return tokens after registration so the user is immediately logged in
+    const jwtToken = generateJwtToken(account);
+    const refreshToken = generateRefreshToken(account, '0.0.0.0'); // IP not relevant for now
+    await refreshToken.save();
+
+    return {
+      ...basicDetails(account),
+      jwtToken,
+      refreshToken: refreshToken.token
+    };
+
     // send email
     //await sendVerificationEmail(account, origin);
   }  
